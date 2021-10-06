@@ -1,0 +1,106 @@
+<script src="steganography.min.js"></script>
+Welcome home.. posts will be shown here
+<a href="/dashboard">DASHBOARD</a>
+<img id="image1" src="" alt="" hidden/>
+<img id="image2" src="" alt="" hidden/>
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mb-3">
+        <i class="fas fa-user-plus"></i> Create POST
+      </h1>
+
+      <form action="/post" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="text">TEXT</label>
+          <input
+            type="text"
+            id="text"
+            name="text"
+            class="form-control"
+            placeholder="Enter text"
+          />
+        </div>
+        <div class="form-group">
+          <!-- <label for="email">Email(only for testing)</label> -->
+          <input
+            type="text"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="Enter email"
+            value=<%=user.email%>
+            hidden
+          />
+          <input type="text" id="code" name="code" value="" hidden/>
+        </div>
+        <div>
+          <label for="image">Upload Image</label>
+          <input type="file" id="image"
+                 name="image" value="" onchange="readURL(this)" required>
+        </div>
+          
+          <button type="submit" class="btn btn-primary btn-block">
+          POST
+        </button>
+</form>
+<button class="btn btn-primary btn-block" onclick="hideText()">
+  encode
+</button>
+    </div>
+  </div>
+</div>
+<script>
+  var imgdatauri;
+
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+  
+      reader.onload = function(e) {  
+        imgdatauri = e.target.result;
+        document.querySelector("#image1").src = e.target.result;
+
+        const decoded = steg.decode(e.target.result);
+        console.log("decoded", decoded);
+        if(decoded){
+          document.querySelector("#email").value= decoded;
+        }
+      };
+    }
+
+    reader.readAsDataURL(input.files[0]);
+    
+  }
+
+  
+function hideText() {
+    var email = document.querySelector('#email').value;
+      document.querySelector('#code').value = steg.encode(email, imgdatauri)
+      document.querySelector("#image2").src = steg.encode(email, imgdatauri);
+}
+
+</script>
+
+
+
+
+      <!-- <%= posts.length %> -->
+
+      <% for(let i=0;i<posts.length;i++){ %>
+        <div class="row mt-5">
+          <div class="col-md-6 m-auto">
+            <div class="card card-body">
+              <div><%=posts[i].username%></div>
+              <div><%=posts[i].text%></div>
+              <img src="<%=posts[i].img.data%>" >
+
+              <%if(posts[i].by.toString() !== user._id.toString()){%>
+                <div style="color:red"><%=posts[i].email%></div>
+              <%}%> 
+            </div>
+          </div>
+        </div>
+  
+      <%}%>
+

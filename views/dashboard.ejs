@@ -1,0 +1,18 @@
+
+<h1>Dashboard</h1>
+<div>
+    <div id="user-details">
+        <h2>Hi! <%= user.name %></h2>
+        <h3>your email: <%= user.email%></h3>
+    </div>
+
+    <h2>Your notifications</h2>
+    <% for(let i=0;i<user.notifications.length;i++){ %>
+        <!-- <div><%=user.notifications[i].name%></div> -->
+        <div><%=user.notifications[i].email%>
+          <a href=/getPost/<%= user.notifications[i].postID%>/<%=user.notifications[i].email%>>see post</a></div>
+      <%}%>
+        <a href="/logout">Logout</a>
+        <a href="/home">HOME</a>
+    
+</div>
